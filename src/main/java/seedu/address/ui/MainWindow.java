@@ -1,6 +1,7 @@
 package seedu.address.ui;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
@@ -17,6 +18,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.ModTutGroup;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -194,8 +196,35 @@ public class MainWindow extends UiPart<Stage> {
             } else {
                 List<String> currentSelectedTabs = List.copyOf(logic.getSelectedTabs());
                 moduleTabPane = new ModuleTabPane(logic.getFilteredPersonList(), logic);
-                moduleTabPane.setSelectedTab(null, currentSelectedTabs, 0);
-                mainViewPlaceholder.getChildren().add(moduleTabPane.getRoot());
+                String currentModTab = currentSelectedTabs.get(0);
+                String currentTutTab = currentSelectedTabs.get(1);
+
+                Map<String, Map<String, Integer>> moduleMap = ModTutGroup.getModuleMap();
+                if (moduleMap.containsKey(currentModTab)) {
+                    // Current module and tutorial tab still exists
+                    if (moduleMap.get(currentModTab).containsKey(currentTutTab)) {
+                        moduleTabPane.setSelectedTab(null, currentSelectedTabs, 0);
+                    // Current module exists, tutorial no longer exists
+                    } else {
+                        currentSelectedTabs = List.of(currentModTab,
+                                moduleMap.get(currentModTab).keySet().iterator().next());
+                        moduleTabPane.setSelectedTab(null, currentSelectedTabs, 0);
+                    }
+                    mainViewPlaceholder.getChildren().add(moduleTabPane.getRoot());
+                } else {
+                    // Current module and tutorial no longer exists
+                    if (!moduleMap.isEmpty()) {
+                        String firstModule = moduleMap.keySet().iterator().next();
+                        String firstTutorial = moduleMap.get(firstModule).keySet().iterator().next();
+                        currentSelectedTabs = List.of(firstModule, firstTutorial);
+                        moduleTabPane.setSelectedTab(null, currentSelectedTabs, 0);
+                        mainViewPlaceholder.getChildren().add(moduleTabPane.getRoot());
+                    // No module or tutorial exists
+                    } else {
+                        PersonListPanel personListPanel = new PersonListPanel(logic.getFilteredPersonList());
+                        mainViewPlaceholder.getChildren().add(personListPanel.getRoot());
+                    }
+                }
             }
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
             resultDisplay.show(primaryStage, commandResult.isHelp());

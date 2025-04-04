@@ -32,6 +32,6 @@ public class DeleteModTutCommandParser implements Parser<DeleteModTutCommand> {
             throw new ParseException(String.format(MESSAGE_INVALID_MODULE_TUTORIAL_GROUP, keyword));
         }
 
-        return new DeleteModTutCommand(ParserUtil.parseModTutGroup(keyword));
+        return new DeleteModTutCommand(keyword);
     }
 }

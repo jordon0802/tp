@@ -25,7 +25,7 @@ public class DeleteModTutCommandTest {
     @Test
     public void execute_validModTut_success() {
         ModTutGroup modTutGroupToDelete = ALICE.getModTutGroups().iterator().next();
-        DeleteModTutCommand deleteModTutCommand = new DeleteModTutCommand(modTutGroupToDelete);
+        DeleteModTutCommand deleteModTutCommand = new DeleteModTutCommand(modTutGroupToDelete.toString());
 
         ModTutGroup.setModuleMap(model.getFilteredPersonList());
 
@@ -43,13 +43,13 @@ public class DeleteModTutCommandTest {
 
     @Test
     public void equals() {
-        DeleteModTutCommand deleteModTutFirstCommand = new DeleteModTutCommand(new ModTutGroup(VALID_MODTUT_AMY));
-        DeleteModTutCommand deleteModTutSecondCommand = new DeleteModTutCommand(new ModTutGroup(VALID_MODTUT_BOB));
+        DeleteModTutCommand deleteModTutFirstCommand = new DeleteModTutCommand(VALID_MODTUT_AMY);
+        DeleteModTutCommand deleteModTutSecondCommand = new DeleteModTutCommand(VALID_MODTUT_BOB);
         //same object -> returns true
         assertTrue(deleteModTutFirstCommand.equals(deleteModTutFirstCommand));
 
         //same values -> returns true
-        DeleteModTutCommand deleteModTutFirstCommandCopy = new DeleteModTutCommand(new ModTutGroup(VALID_MODTUT_AMY));
+        DeleteModTutCommand deleteModTutFirstCommandCopy = new DeleteModTutCommand(VALID_MODTUT_AMY);
         assertTrue(deleteModTutFirstCommand.equals(deleteModTutFirstCommandCopy));
 
 
