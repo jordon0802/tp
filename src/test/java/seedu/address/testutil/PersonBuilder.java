@@ -26,7 +26,7 @@ public class PersonBuilder {
     private Name name;
     private Email email;
     private TelegramHandle telegramHandle;
-    private Set<ModTutGroup> modTutGroup = new HashSet<>();
+    private Set<ModTutGroup> modTutGroups = new HashSet<>();
     private Set<Tag> tags = new HashSet<>();
     private boolean isPin;
 
@@ -37,7 +37,7 @@ public class PersonBuilder {
         name = new Name(DEFAULT_NAME);
         email = new Email(DEFAULT_EMAIL);
         telegramHandle = new TelegramHandle(DEFAULT_TELEGRAMHANDLE);
-        modTutGroup.add(new ModTutGroup(DEFAULT_MODTUTGRP));
+        modTutGroups.add(new ModTutGroup(DEFAULT_MODTUTGRP));
         isPin = DEFAULT_PIN;
     }
 
@@ -48,7 +48,7 @@ public class PersonBuilder {
         name = personToCopy.getName();
         email = personToCopy.getEmail();
         telegramHandle = personToCopy.getTelegramHandle();
-        modTutGroup = personToCopy.getModTutGroups();
+        modTutGroups = personToCopy.getModTutGroups();
         tags = personToCopy.getTags();
         isPin = personToCopy.getPin();
     }
@@ -82,7 +82,7 @@ public class PersonBuilder {
      * and set it to the {@code Person} that we are building.
      */
     public PersonBuilder withModTuts(String... modTuts) {
-        this.modTutGroup = SampleDataUtil.getModTutSet(modTuts);
+        this.modTutGroups = SampleDataUtil.getModTutSet(modTuts);
         return this;
     }
 
@@ -106,7 +106,7 @@ public class PersonBuilder {
      * Builds the {@code Person} object.
      */
     public Person build() {
-        return new Person(name, telegramHandle, email, modTutGroup, tags, isPin);
+        return new Person(name, telegramHandle, email, modTutGroups, tags, isPin);
     }
 
 }

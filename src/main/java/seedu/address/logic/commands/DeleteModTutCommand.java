@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_MODULE_TUTORIAL_GROUP;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
@@ -48,8 +49,21 @@ public class DeleteModTutCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+
+        String modTutGroupName = modTutGroup.toString();
+        String moduleName = modTutGroupName.split("-")[0];
+        String tutorialName = modTutGroupName.split("-")[1];
+
+        if (!ModTutGroup.getModuleMap().containsKey(moduleName)) {
+            throw new CommandException(String.format(MESSAGE_INVALID_MODULE_TUTORIAL_GROUP, modTutGroupName));
+        }
+
+        if (!ModTutGroup.getModuleMap().get(moduleName).containsKey(tutorialName)) {
+            throw new CommandException(String.format(MESSAGE_INVALID_MODULE_TUTORIAL_GROUP, modTutGroupName));
+        }
+
         model.deleteModTut(this.modTutGroup);
-        return new CommandResult(String.format(MESSAGE_DELETE_TUT_SUCCESS, modTutGroup.toString()),
+        return new CommandResult(String.format(MESSAGE_DELETE_TUT_SUCCESS, modTutGroupName),
                 false, false, false);
     }
 

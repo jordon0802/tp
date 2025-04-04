@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import seedu.address.commons.util.StringUtil;
@@ -115,6 +116,34 @@ public class ModTutGroup {
     }
 
     public static Map<String, Map<String, Integer>> getModuleMap() {
+        return moduleMap;
+    }
+
+    public static Map<String, Map<String, Integer>> setModuleMap(List<Person> personList) {
+        requireNonNull(personList);
+        moduleMap.clear();
+        for (Person person : personList) {
+            for (ModTutGroup modTutGroup : person.getModTutGroups()) {
+                String modTutGroupString = modTutGroup.toString();
+                String moduleString = modTutGroupString.split("-")[0];
+                String tutorialString = modTutGroupString.split("-")[1];
+
+                Map<String, Integer> tutorialMap;
+                if (!moduleMap.containsKey(moduleString)) {
+                    tutorialMap = new HashMap<>();
+                    tutorialMap.put(tutorialString, 1);
+                } else {
+                    tutorialMap = moduleMap.get(moduleString);
+                    if (moduleMap.get(moduleString).containsKey(tutorialString)) {
+                        int count = moduleMap.get(moduleString).get(tutorialString);
+                        tutorialMap.put(tutorialString, count + 1);
+                    } else {
+                        tutorialMap.put(tutorialString, 1);
+                    }
+                }
+                moduleMap.put(moduleString, tutorialMap);
+            }
+        }
         return moduleMap;
     }
 
