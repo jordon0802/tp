@@ -1,9 +1,11 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_MODULE;
 
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.person.ModTutGroup;
 import seedu.address.model.person.Module;
 
 /**
@@ -12,28 +14,36 @@ import seedu.address.model.person.Module;
  */
 public class DeleteModCommand extends Command {
 
-    /** Command word to trigger this command. */
+    /**
+     * Command word to trigger this command.
+     */
     public static final String COMMAND_WORD = "deleteMod";
 
-    /** Usage instructions for this command. */
+    /**
+     * Usage instructions for this command.
+     */
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes the module as specified, as well as contacts who only take that module.\n"
             + "Parameters: MODULE_CODE (Case-insensitive)\n"
             + "Example: " + COMMAND_WORD + " CS2103T";
 
-    /** Success message displayed after module is deleted. */
+    /**
+     * Success message displayed after module is deleted.
+     */
     public static final String MESSAGE_DELETE_MOD_SUCCESS = "Course Deleted: %1$s";
 
-    /** The module to be deleted from the address book. */
-    private final Module module;
+    /**
+     * The module to be deleted from the address book.
+     */
+    private final String moduleName;
 
     /**
      * Constructs a DeleteModCommand with the specified module.
      *
-     * @param module The module to delete from persons and the address book.
+     * @param moduleName The module to delete from persons and the address book.
      */
-    public DeleteModCommand(Module module) {
-        this.module = module;
+    public DeleteModCommand(String moduleName) {
+        this.moduleName = moduleName;
     }
 
     /**
@@ -47,8 +57,15 @@ public class DeleteModCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        model.deleteMod(this.module);
-        return new CommandResult(String.format(MESSAGE_DELETE_MOD_SUCCESS, module.toString()), false, false, false);
+
+        if (!ModTutGroup.getModuleMap().containsKey(moduleName)) {
+            throw new CommandException(String.format(MESSAGE_INVALID_MODULE, moduleName));
+        }
+
+        Module module = new Module(moduleName);
+
+        model.deleteMod(module);
+        return new CommandResult(String.format(MESSAGE_DELETE_MOD_SUCCESS, moduleName), false, false, false);
     }
 
     @Override
@@ -63,6 +80,6 @@ public class DeleteModCommand extends Command {
         }
 
         DeleteModCommand otherDeleteModCommand = (DeleteModCommand) other;
-        return module.equals(otherDeleteModCommand.module);
+        return moduleName.equals(otherDeleteModCommand.moduleName);
     }
 }

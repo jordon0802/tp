@@ -1,19 +1,23 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_MOD_AMY;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_MOD_BOB;
-import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
-import static seedu.address.logic.commands.DeleteModCommand.MESSAGE_DELETE_MOD_SUCCESS;
+import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.getSortedTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.ModTutGroup;
 import seedu.address.model.person.Module;
+import seedu.address.testutil.ModuleMapUtil;
 
 
 public class DeleteModCommandTest {
@@ -21,26 +25,32 @@ public class DeleteModCommandTest {
 
     @Test
     public void execute_validMod_success() {
-        Module module = new Module(VALID_MOD_AMY);
-        DeleteModCommand deleteModCommand = new DeleteModCommand(module);
+        Module moduleToDelete = ALICE.getModTutGroups().iterator().next().getModule();
+        DeleteModCommand deleteModCommand = new DeleteModCommand(moduleToDelete.toString());
 
-        String expectedMessage = String.format(MESSAGE_DELETE_MOD_SUCCESS, module.toString());
-        ModelManager expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        ModTutGroup.setModuleMap(model.getFilteredPersonList());
 
-        expectedModel.deleteMod(module);
+        ModuleMapUtil.setModuleMap(model.getFilteredPersonList());
+        ModuleMapUtil.deleteModule(moduleToDelete.toString());
 
-        assertCommandSuccess(deleteModCommand, model, expectedMessage, expectedModel);
+        try {
+            deleteModCommand.execute(model);
+        } catch (CommandException e) {
+            fail(e.toString());
+        }
+
+        assertEquals(ModuleMapUtil.getModuleMap(), ModTutGroup.getModuleMap());
     }
 
     @Test
     public void equals() {
-        DeleteModCommand deleteModFirstCommand = new DeleteModCommand(new Module(VALID_MOD_AMY));
-        DeleteModCommand deleteModSecondCommand = new DeleteModCommand(new Module(VALID_MOD_BOB));
+        DeleteModCommand deleteModFirstCommand = new DeleteModCommand(VALID_MOD_AMY);
+        DeleteModCommand deleteModSecondCommand = new DeleteModCommand(VALID_MOD_BOB);
         //same object -> returns true
         assertTrue(deleteModFirstCommand.equals(deleteModFirstCommand));
 
         //same values -> returns true
-        DeleteModCommand deleteModFirstCommandCopy = new DeleteModCommand(new Module(VALID_MOD_AMY));
+        DeleteModCommand deleteModFirstCommandCopy = new DeleteModCommand(VALID_MOD_AMY);
         assertTrue(deleteModFirstCommand.equals(deleteModFirstCommandCopy));
 
 

@@ -8,7 +8,6 @@ import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSucces
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.DeleteModCommand;
-import seedu.address.model.person.Module;
 
 
 public class DeleteModCommandParserTest {
@@ -17,7 +16,7 @@ public class DeleteModCommandParserTest {
 
     @Test
     public void parse_validArgs_returnsDeleteModCommand() {
-        assertParseSuccess(parser, VALID_MOD_AMY, new DeleteModCommand(new Module(VALID_MOD_AMY)));
+        assertParseSuccess(parser, VALID_MOD_AMY, new DeleteModCommand(VALID_MOD_AMY));
     }
 
     @Test

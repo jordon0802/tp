@@ -26,7 +26,6 @@ import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.SortCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Module;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.predicates.EmailContainsKeywordsPredicate;
 import seedu.address.model.person.predicates.FieldContainsKeywordsPredicate;
@@ -64,7 +63,7 @@ public class AddressBookParserTest {
     public void parseCommand_deleteMod() throws Exception {
         DeleteModCommand command = (DeleteModCommand) parser.parseCommand(
                 DeleteModCommand.COMMAND_WORD + " " + "CS2103T");
-        assertEquals(new DeleteModCommand(new Module("CS2103T")), command);
+        assertEquals(new DeleteModCommand("CS2103T"), command);
     }
 
     @Test

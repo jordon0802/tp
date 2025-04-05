@@ -26,16 +26,13 @@ public class DeleteModCommandParser implements Parser<DeleteModCommand> {
         String keyword = args.trim();
 
         if (keyword.isEmpty()) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteModCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteModCommand.MESSAGE_USAGE));
         }
 
-        try {
-            Module module = new Module(keyword.toUpperCase());
-            return new DeleteModCommand(module);
-        } catch (Exception e) {
-            throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteModCommand.MESSAGE_USAGE), e);
+        if (!Module.isValidModule(keyword)) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteModCommand.MESSAGE_USAGE));
         }
+
+        return new DeleteModCommand(keyword);
     }
 }
